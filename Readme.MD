@@ -213,3 +213,42 @@ pm2 restart next-app
 ----------
 
 This documentation covers all aspects of deployment. Save it as  **DEPLOYMENT.md**  in your project for future reference! Let me know if you need any modifications. 
+
+
+
+### **Clean Setup Process**
+
+#### 1.  **Remove All Existing PM2 Apps**
+```bash
+pm2 delete all       # Delete all running applications
+pm2 cleardump       # Clear autostart configurations
+pm2 save --force    # Save empty state
+```
+
+#### 2.  **Start Your First App (Port 3000)**
+```bash
+cd /path/to/first-app
+npm install
+npm run build
+pm2 start "npm run start" --name "app-3000" -- --port 3000
+```
+
+#### 3.  **Start Your Second App (Port 4000)**
+```bash
+cd /path/to/second-app
+npm install
+npm run build
+pm2 start "npm run start" --name "app-4000" -- --port 4000
+```
+#### 4.  **Configure Auto-Start**
+```bash
+pm2 save           # Save current process list
+pm2 startup        # Generate startup script
+```
+# Copy-paste the generated command to enable auto-start
+
+### **Verification**
+```bash
+pm2 list
+```
+
