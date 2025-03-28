@@ -252,3 +252,75 @@ pm2 startup        # Generate startup script
 pm2 list
 ```
 
+
+
+### **Enable Watch Mode for Both Apps**
+
+#### 1.  **First, stop and delete existing apps**  (if running):
+```bash
+pm2 delete app-3000 app-4000
+```
+#### 2.  **Start apps with watch mode**:
+
+**For App on Port 3000:**
+```bash
+cd /path/to/first-app
+pm2 start "npm run dev" --name "app-3000" --watch -- --port 3000
+```
+**For App on Port 4000:**
+```bash
+cd /path/to/second-app
+pm2 start "npm run dev" --name "app-4000" --watch -- --port 4000
+
+🔥  **Key Notes:**
+
+-   Uses  `npm run dev`  (Next.js development mode) instead of  `start`
+     
+ -   `--watch`  flag enables file watching
+
+ -   `--port`  sets the custom port
+```    
+
+----------
+
+### **Configure Watch Options (Optional)**
+
+To ignore specific folders/files (like  `node_modules`), create an ecosystem file:
+```bash
+pm2 init
+
+Edit the generated  `ecosystem.config.js`:
+```
+```js
+module.exports = {
+  apps: [
+    {
+      name: "app-3000",
+      script: "npm",
+      args: "run dev -- --port 3000",
+      watch: true,
+      ignore_watch: ["node_modules", ".next"],
+    },
+    {
+      name: "app-4000",
+      script: "npm",
+      args: "run dev -- --port 4000",
+      watch: true,
+      ignore_watch: ["node_modules", ".next"],
+    }
+  ]
+}
+```
+Then start with:
+```bash
+pm2 start ecosystem.config.js
+```
+----------
+
+### **Verify Watch Mode**
+
+Check status:
+```bash
+pm2 list
+```
+Look for the  `watch`  column showing  `enabled`.
